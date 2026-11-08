@@ -1,15 +1,16 @@
 from fastapi import FastAPI
+from app.db import init_db
 from app.routers import customer
 
+init_db()
 app = FastAPI(
-    title="Loja Online API",
-    description="Uma loja online quer enviar mensagens semanais aos clientes, de acordo com o perfil de compra de cada um.",
-    version="1.0.0"
+    title="Best Life",
+    description="Trilhas e envios simulados",
+    version="1.0.0",
 )
-
 app.include_router(customer.router)
 
 
 @app.get("/")
-async def health_check():
+def health_check() -> dict:
     return {"status": "OK"}

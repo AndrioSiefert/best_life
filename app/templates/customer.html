@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>{{ customer.full_name }}</h1>
+
+  <p>ID: {{ customer.id }}</p>
+  <p>Idade: {{ customer.age }}</p>
+  <p>Sexo: {{ customer.gender }}</p>
+  <p>Estado: {{ customer.state }}</p>
+  <p>Telefone: {{ customer.phone }}</p>
+  <p>Valor total: R$ {{ "%.2f"|format(customer.total_value) }}</p>
+  <p>Itens: {{ customer.total_items }}</p>
+
+  <h2>Trilhas sugeridas</h2>
+  <ul>
+    {% for name, reason in suggestions %}
+      <li><strong>{{ name }}</strong>: {{ reason }}</li>
+    {% endfor %}
+  </ul>
+
+  <h2>Decisão do analista</h2>
+  {% if decision %}
+    <p>
+      Confirmado em {{ decision.confirmed_at }}. Alterar as trilhas reinicia
+      o cronograma na data da alteração.
+    </p>
+  {% else %}
+    <p>Este cliente ainda não está no cronograma.</p>
+  {% endif %}
+
+  <form method="post">
+    <p>Escolha uma ou mais trilhas. A trilha Geral deve ser escolhida sozinha.</p>
+
+    {% for track in tracks %}
+      <label>
+        <input type="checkbox" name="tracks" value="{{ track }}"
+          {% if track in selected %}checked{% endif %}>
+        {{ track }}
+      </label>
+      <br>
+    {% endfor %}
+
+    <p><button type="submit">Confirmar trilhas</button></p>
+  </form>
+{% endblock %}

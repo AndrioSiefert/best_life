@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Histórico de simulações</h1>
+  <p>{{ history|length }} envio(s) simulado(s). O token não é armazenado.</p>
+
+  {% for item in history %}
+    <article>
+      <h2>{{ item.customer_name }} — {{ item.scheduled_date }}</h2>
+      <p>{{ item.track }}: {{ item.message }}</p>
+      <details>
+        <summary>Requisição simulada</summary>
+        <pre>{{ item.request }}</pre>
+      </details>
+    </article>
+    <hr>
+  {% endfor %}
+{% endblock %}

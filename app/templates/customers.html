@@ -1,41 +1,53 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <title>Clientes</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block content %}
   <h1>Clientes</h1>
 
   <form method="get" action="/customers">
-    <label for="track">Trilha:</label>
-    <select name="track" id="track" onchange="this.form.submit()">
+    <label for="track">Trilha sugerida:</label>
+    <select name="track" id="track">
       <option value="">Todas</option>
-      {% for t in all_tracks %}
-        <option value="{{ t }}" {% if t == selected %}selected{% endif %}>{{ t }}</option>
+      {% for track in all_tracks %}
+        <option value="{{ track }}" {% if track == selected %}selected{% endif %}>
+          {{ track }}
+        </option>
       {% endfor %}
     </select>
-    <noscript><button type="submit">Filtrar</button></noscript>
+    <button type="submit">Filtrar</button>
   </form>
 
   <p>{{ customers|length }} cliente(s)</p>
 
-  <table border="1" cellpadding="4">
-    <tr>
-      <th>ID</th><th>Nome</th><th>Idade</th><th>Estado</th>
-      <th>Valor total</th><th>Itens</th><th>Trilhas sugeridas</th>
-    </tr>
-    {% for c in customers %}
-    <tr>
-      <td>{{ c.data["id"] }}</td>
-      <td>{{ c.data["full_name"] }}</td>
-      <td>{{ c.data["age"] }}</td>
-      <td>{{ c.data["state"] }}</td>
-      <td>R$ {{ "%.2f"|format(c.data["total_value"]) }}</td>
-      <td>{{ c.data["total_items"] }}</td>
-      <td>{{ c.tracks|join(", ") }}</td>
-    </tr>
-    {% endfor %}
-  </table>
-</body>
-</html>
+  {% if not customers %}
+    <p>Nenhum cliente encontrado. Se o banco estiver vazio, execute a extração e a carga.</p>
+  {% endif %}
+
+  <div class="table">
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Idade</th>
+        <th>Estado</th>
+        <th>Valor total</th>
+        <th>Itens</th>
+        <th>Trilhas sugeridas</th>
+      </tr>
+      {% for customer in customers %}
+        <tr>
+          <td>{{ customer.data["id"] }}</td>
+          <td>
+            <a href="/customers/{{ customer.data['id'] }}">
+              {{ customer.data["full_name"] }}
+            </a>
+          </td>
+          <td>{{ customer.data["age"] }}</td>
+          <td>{{ customer.data["state"] }}</td>
+          <td>R$ {{ "%.2f"|format(customer.data["total_value"]) }}</td>
+          <td>{{ customer.data["total_items"] }}</td>
+          <td>{{ customer.tracks|join(", ") }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+{% endblock %}

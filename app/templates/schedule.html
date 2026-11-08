@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Cronograma</h1>
+
+  <p>
+    O primeiro envio ocorre no dia escolhido a partir da confirmação.
+    Alterar o dia recalcula as datas de todos os clientes.
+  </p>
+
+  <form method="post">
+    <label for="weekday">Dia da semana:</label>
+    <select name="weekday" id="weekday">
+      {% for day in weekdays %}
+        <option value="{{ loop.index0 }}" {% if loop.index0 == weekday %}selected{% endif %}>
+          {{ day }}
+        </option>
+      {% endfor %}
+    </select>
+    <button type="submit">Salvar dia</button>
+  </form>
+
+  <form method="post" action="/simulate">
+    <p><button type="submit">Simular envios de hoje</button></p>
+  </form>
+
+  <p>{{ events|length }} envio(s) previsto(s). A simulação não envia mensagens reais.</p>
+
+  <div class="table">
+    <table>
+      <tr>
+        <th>Data</th>
+        <th>Cliente</th>
+        <th>Trilha</th>
+        <th>Mensagem</th>
+      </tr>
+      {% for event in events %}
+        <tr>
+          <td>{{ event.date }}</td>
+          <td>
+            <a href="/customers/{{ event.customer_id }}">{{ event.name }}</a>
+          </td>
+          <td>{{ event.track }}</td>
+          <td>{{ event.message }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+{% endblock %}
